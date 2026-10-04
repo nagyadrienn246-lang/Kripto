@@ -12,13 +12,53 @@ Replace this with a description of the program.
 import utils
 
 # Caesar Cipher
+abc = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+           'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+           'U', 'V', 'W', 'X', 'Y', 'Z']
+
+def index_back(ind):
+
+    if ind < 23:
+        ind = ind + 3
+    else:
+        ind = ind - 23
+
+    return ind
+
+def caesar_error(plaintext):
+    if len(plaintext) == 0:
+        raise ValueError("Text cannot be empty")
+     
+    for letter in plaintext:
+        if letter.isalpha() and letter.isupper() == False:
+            raise ValueError("Text must contain only uppercase letters")
 
 def encrypt_caesar(plaintext):
     """Encrypt plaintext using a Caesar cipher.
 
     Add more implementation details here.
     """
-    raise NotImplementedError  # Your implementation here
+    caesar_error(plaintext)
+
+    ciphertext = ""
+
+    for letter in plaintext:
+        if letter in abc:
+            letter_index = abc.index(letter)
+            ciphertext = ciphertext + abc[index_back(letter_index)]
+        else:
+            ciphertext += letter
+
+    return ciphertext
+
+def index_before(ind):
+
+    if ind > 2:
+        ind = ind - 3
+    else:
+        ind = 23 + ind
+
+    return ind
 
 
 def decrypt_caesar(ciphertext):
@@ -26,17 +66,72 @@ def decrypt_caesar(ciphertext):
 
     Add more implementation details here.
     """
-    raise NotImplementedError  # Your implementation here
+    caesar_error(ciphertext)
+    
+    plaintext = ""
+    
+    for letter in ciphertext:
+        if letter in abc:
+            letter_index = abc.index(letter)
+            plaintext = plaintext + abc[index_before(letter_index)]
+        else:
+            plaintext += letter
+    
+    return plaintext
 
 
 # Vigenere Cipher
+
+def keyword_repeat(keyword, length):
+
+    new_key = ""
+
+    if length > len(keyword):
+        part = length % len(keyword)
+        whole = length // len(keyword) 
+
+        for i in range(whole):
+            new_key += keyword
+
+        new_key += keyword[0:part]
+    else:
+        new_key = keyword
+
+    return new_key
+
+def vigenere_error(plaintext, keyword):
+    if len(plaintext) == 0:
+                 raise ValueError("Text cannot be empty")
+         
+    for letter in plaintext:
+             if letter.isalpha() == False or letter.isupper() == False:
+                     raise ValueError("Text must contain only uppercase letters")
+     
+    if len(keyword) == 0:
+                     raise ValueError("Text cannot be empty")
+             
+    for letter in keyword:
+             if letter.isalpha() == False or letter.isupper() == False:
+                 raise ValueError("Text must contain only uppercase letters")
 
 def encrypt_vigenere(plaintext, keyword):
     """Encrypt plaintext using a Vigenere cipher with a keyword.
 
     Add more implementation details here.
     """
-    raise NotImplementedError  # Your implementation here
+
+    vigenere_error(plaintext, keyword)
+        
+    ciphertext = ""
+    keyword = keyword_repeat(keyword, len(plaintext))
+    for i in range(len(plaintext)):
+        index = abc.index(plaintext[i]) + abc.index(keyword[i])
+        if index > 25:
+            index %= 26
+        ciphertext += abc[index]
+
+    return ciphertext
+
 
 
 def decrypt_vigenere(ciphertext, keyword):
@@ -44,7 +139,212 @@ def decrypt_vigenere(ciphertext, keyword):
 
     Add more implementation details here.
     """
-    raise NotImplementedError  # Your implementation here
+
+    vigenere_error(ciphertext, keyword)
+
+    plaintext = ""
+    keyword = keyword_repeat(keyword, len(ciphertext))
+    for i in range(len(ciphertext)):
+        index = abc.index(ciphertext[i]) - abc.index(keyword[i])
+        if index < 0:
+            index = 26 + index
+
+        plaintext += abc[index]
+    
+    return plaintext
+
+
+
+#Scytale Cipher
+def encrypt_scytale(plaintext, circumference):
+
+    last_two_error(plaintext,circumference)
+
+    ciphertext = ""
+    for i in range(circumference):
+        for j in range(0,len(plaintext),circumference):
+            if (i+j) < len(plaintext):
+                ciphertext += plaintext[j+i]
+    return ciphertext
+
+
+def last_two_error(text, number):
+    if len(text) == 0:
+                      raise ValueError("Text cannot be empty")
+              
+    for letter in text:
+                  if letter.isalpha() == False or letter.isupper() == False:
+                          raise ValueError("Text must contain only uppercase letters")
+
+    if isinstance(number, int) == False or number <= 0:
+         raise ValueError("The second parameter has to be a number, greater than 0")
+
+def decrypt_scytale(ciphertext, circumference):
+
+    last_two_error(ciphertext,circumference)
+    plaintext = ""
+    column = len(ciphertext) // circumference
+    remainder = len(ciphertext) % circumference
+
+    if remainder != 0:
+        column += 1
+    else:
+        for i in range(column):
+            for j in range(0, len(ciphertext), column):
+                if (i+j)<len(ciphertext):
+                    plaintext += ciphertext[i+j]
+        return plaintext
+    
+    for i in range(column):
+        j = -column
+        count = 0
+        while count < remainder + 1 and len(ciphertext)!=len(plaintext):
+            j += column
+            count += 1
+            plaintext += ciphertext[i+j]
+
+        j += column -1
+        while( i+j < len(ciphertext) and len(ciphertext)!= len(plaintext)):
+            plaintext += ciphertext[i+j]
+            j += column -1
+
+
+    return plaintext
+
+
+def encrypt_railfence(plaintext, rail):
+
+    last_two_error(plaintext,rail)
+
+    if rail == 1:
+        return plaintext
+
+    ciphertext = ""
+
+    index = []
+    while len(index) < len(plaintext):
+        for i in range(0, rail-1):
+            index.append(i)
+            if len(index) == len(plaintext):
+                break
+        if len(index) == len(plaintext):
+                                    break
+        for i in range(rail-1, 0, -1):
+            index.append(i)
+            if len(index) == len(plaintext):
+                            break
+
+    for i in range(rail):
+        for j in range(0, len(index)):
+            if index[j] == i:
+                ciphertext += plaintext[j]
+    return ciphertext
+
+def decrypt_railfence(ciphertext, rail):
+    last_two_error(ciphertext,rail)
+    if rail == 1:
+        return ciphertext
+
+    index = []
+
+    while len(index) < len(ciphertext):
+        for i in range(0, rail-1):
+            index.append(i)
+            if len(index) == len(ciphertext):
+                break
+        if len(index) == len(ciphertext):
+                break
+        for i in range(rail-1, 0, -1):
+            index.append(i)
+            if len(index) == len(ciphertext):
+                break
+
+    plaintext = ""
+
+    parts = []
+    for i in range(rail):
+        for j in range(index.count(i)):
+            parts.append(i)
+
+    
+
+    for i in range(len(index)):
+        j = 0
+        while j < len(parts) and parts[j]!= index[i]:
+             j +=1
+        if j < len(parts):
+             plaintext += ciphertext[j]
+             parts[j] = -1
+    return plaintext
+
+
+def encrypt_railfence_bin(plaintext, rail):
+
+
+    if rail == 1:
+        return plaintext
+
+    ciphertext = []
+
+    index = []
+    while len(index) < len(plaintext):
+        for i in range(0, rail-1):
+            index.append(i)
+            if len(index) == len(plaintext):
+                break
+        if len(index) == len(plaintext):
+                                    break
+        for i in range(rail-1, 0, -1):
+            index.append(i)
+            if len(index) == len(plaintext):
+                            break
+
+    for i in range(rail):
+        for j in range(0, len(index)):
+            if index[j] == i:
+                ciphertext.append(plaintext[j])
+    return bytes(ciphertext)
+
+def decrypt_railfence_bin(ciphertext, rail):
+
+    if rail == 1:
+        return ciphertext
+
+    index = []
+
+    while len(index) < len(ciphertext):
+        for i in range(0, rail-1):
+            index.append(i)
+            if len(index) == len(ciphertext):
+                break
+        if len(index) == len(ciphertext):
+                break
+        for i in range(rail-1, 0, -1):
+            index.append(i)
+            if len(index) == len(ciphertext):
+                break
+
+    plaintext = []
+
+    parts = []
+    for i in range(rail):
+        for j in range(index.count(i)):
+            parts.append(i)
+
+    
+
+    plaintext = bytearray()
+    used = [False] * len(ciphertext)
+
+    for r in index:
+        for j in range(len(parts)):
+            if not used[j] and parts[j] == r:
+                plaintext.append(ciphertext[j])
+                used[j] = True
+                break
+
+    return bytes(plaintext)
+   
 
 
 # Merkle-Hellman Knapsack Cryptosystem
