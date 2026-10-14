@@ -12,7 +12,10 @@ import random
 from crypto import (encrypt_caesar, decrypt_caesar,
                     encrypt_vigenere, decrypt_vigenere,
                     generate_private_key, create_public_key,
-                    encrypt_mh, decrypt_mh)
+                    encrypt_mh, decrypt_mh, encrypt_railfence, 
+                    decrypt_railfence, encrypt_scytale,
+                    decrypt_scytale, encrypt_railfence_bin,
+                    decrypt_railfence_bin)
 
 
 #############################
@@ -21,7 +24,10 @@ from crypto import (encrypt_caesar, decrypt_caesar,
 
 def get_tool():
     print("* Tool *")
-    return _get_selection("(C)aesar, (V)igenere or (M)erkle-Hellman? ", "CVM")
+    return _get_selection("(C)aesar, (V)igenere, (M)erkle-Hellman, "
+        "(R)ailfence, (S)cytale, (B)inary Railfence? ",
+        "CV MRSB".replace(" ", "")
+    )
 
 
 def get_action():
@@ -130,6 +136,61 @@ def run_vigenere():
 
     set_output(output)
 
+def run_railfence():
+    action = get_action()
+    encrypting = action == 'E'
+    data = get_input(binary=False)
+
+    print("* Transform *")
+    rails = int(input("Rails (sínek száma)? "))
+
+    print("{}crypting {} using Rail Fence cipher with {} rails...".format(
+        'En' if encrypting else 'De', data, rails
+    ))
+
+    output = (encrypt_railfence if encrypting else decrypt_railfence)(
+        data, rails
+    )
+
+    set_output(output)
+
+def run_scytale():
+    action = get_action()
+    encrypting = action == 'E'
+    data = get_input(binary=False)
+
+    print("* Transform *")
+    rails = int(input("circumstance? "))
+
+    print("{}crypting {} using Scytale cipher with {} ...".format(
+        'En' if encrypting else 'De', data, rails
+    ))
+
+    output = (encrypt_scytale if encrypting else decrypt_scytale)(
+        data, rails
+    )
+
+    set_output(output)
+
+def run_binary():
+    action = get_action()
+    encrypting = action == 'E'
+    data = get_input(binary=False)
+
+    print("* Transform *")
+    rails = int(input("Rails (sínek száma)? "))
+
+    print("{}crypting {} using Rail Fence cipher with {} rails...".format(
+        'En' if encrypting else 'De', data, rails
+    ))
+
+    output = (encrypt_railfence_bin if encrypting else decrypt_railfence_bin)(
+        data, rails
+    )
+
+    set_output(output)
+
+
 
 def run_merkle_hellman():
     action = get_action()
@@ -175,7 +236,10 @@ def run_suite():
     commands = {
         'C': run_caesar,         # Caesar Cipher
         'V': run_vigenere,       # Vigenere Cipher
-        'M': run_merkle_hellman  # Merkle-Hellman Knapsack Cryptosystem
+        'M': run_merkle_hellman,
+        'R': run_railfence,
+        'S': run_scytale,
+        'B': run_binary # Merkle-Hellman Knapsack Cryptosystem
     }
     commands[tool]()
 
