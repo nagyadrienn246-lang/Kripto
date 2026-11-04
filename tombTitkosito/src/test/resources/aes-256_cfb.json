@@ -1,0 +1,8 @@
+{
+  "blocksize": 16,
+  "cipher": "AES-256",
+  "key": "MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=",
+  "mode": "CFB",
+  "iv": "MDEyMzQ1Njc4OWFiY2RlZg==",
+  "padding": "ZERO"
+}

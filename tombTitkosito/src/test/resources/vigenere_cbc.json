@@ -1,0 +1,8 @@
+{
+  "blocksize": 16,
+  "cipher": "VIGENERE-BIN",
+  "key": "MDEyMzQ1Njc4OWFiY2RlZg==",
+  "mode": "CBC",
+  "iv": "MDEyMzQ1Njc4OWFiY2RlZg==",
+  "padding": "ZERO"
+}

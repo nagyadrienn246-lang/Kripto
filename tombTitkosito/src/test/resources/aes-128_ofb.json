@@ -1,0 +1,8 @@
+{
+  "blocksize": 16,
+  "cipher": "AES-128",
+  "key": "c2VjcmV0a2V5MTIzNDU2Nw==",
+  "mode": "OFB",
+  "iv": "aW5pdHZlY3RvcjEyMzQ1Ng==",
+  "padding": "DES"
+}

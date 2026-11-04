@@ -1,0 +1,7 @@
+{
+  "blocksize": 16,
+  "cipher": "AES-128",
+  "key": "MDEyMzQ1Njc4OWFiY2RlZg==",
+  "mode": "ECB",
+  "padding": "ZERO"
+}
